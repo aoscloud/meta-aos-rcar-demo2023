@@ -250,7 +250,6 @@
 &gpio3			{ xen,passthrough; };
 &i2c0			{ xen,passthrough; };
 &i2c4			{ xen,passthrough; };
-&mmc0			{ xen,passthrough; };
 &pciec0			{ xen,passthrough; };
 &scif0			{ xen,passthrough; };
 &hscif1			{ xen,passthrough; };
