@@ -73,5 +73,11 @@ R-Car Gen3 device.
 To deploy the full image to R-Car-S4 device, see [meta-aos-rcar-gen4]
 (https://github.com/aoscloud/meta-aos-rcar-gen4/blob/main/README.md).
 
+Additionaly for UFS on R-Car-S4 following command set_ufs has to be executed before system boot:
+
+```sh
+setenv set_ufs 'i2c dev 0; i2c mw 0x6c 0x26 0x05 ;i2c olen 0x6c 2; i2c mw 0x6c 0x13a 0x86 ;i2c mw 0x6c 0x268 0x06; i2c mw 0x6c 0x269 0x00; i2c mw 0x6c 0x26a 0x3c; i2c mw 0x6c 0x26b 0x00; i2c mw 0x6c 0x26c 0x06; i2c mw 0x6c 0x26d 0x00; i2c mw 0x6c 0x26e 0x3f; i2c mw 0x6c 0x26f 0x00'
+```
+
 To deploy the full image to R-Car Gen3 device, see [meta-aos-rcar-gen3]
 (https://github.com/aoscloud/meta-aos-rcar-gen3/blob/main/README.md).
