@@ -1,5 +1,5 @@
 desc: "Aos virtual development machine"
-min_ver: "0.11"
+min_ver: "0.14"
 
 variables:
   # Common build configuration
@@ -56,6 +56,7 @@ variables:
 
   GEN4_DOM0_BUILD_DIR: "build/gen4/dom0"
   GEN4_DOMD_BUILD_DIR: "build/gen4/domd"
+  GEN4_ZEPHYR_DOM0_DIR: "zephyr/gen4-dom0"
 
   GEN4_XT_DOMD_DTB_NAME: "%{GEN4_SOC_FAMILY}-%{GEN4_MACHINE}-domd.dtb"
   GEN4_XT_XEN_DTB_NAME: "%{GEN4_SOC_FAMILY}-%{GEN4_MACHINE}-xen.dtb"
@@ -72,6 +73,7 @@ variables:
 
   GEN3_DOM0_BUILD_DIR: "build/gen3/dom0"
   GEN3_DOMD_BUILD_DIR: "build/gen3/domd"
+  GEN3_ZEPHYR_DOM0_DIR: "zephyr/gen3-dom0"
 
   GEN3_XT_DOMD_DTB_NAME: "%{GEN3_SOC_FAMILY}-%{GEN3_MACHINE}-domd.dtb"
   GEN3_XT_XEN_DTB_NAME: "%{GEN3_SOC_FAMILY}-%{GEN3_MACHINE}-xen.dtb"
@@ -102,6 +104,12 @@ common_data:
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-demo2023"
       rev: "v0.2.0"
+
+  # Zephyr sources
+  zephyr_sources: &ZEPHYR_SOURCES
+    - type: west
+      url: "https://github.com/aoscloud/aos_core_zephyr.git"
+      rev: "xrun_integration"
 
   # Sources to be used in DomD
   domd_sources: &DOMD_SOURCES
@@ -187,67 +195,6 @@ common_data:
     - [IMAGE_FSTYPES_append, " ext4"]
 
 components:
-  gen4-dom0:
-    build-dir: "%{YOCTOS_WORK_DIR}"
-    default: true
-    sources:
-      - *COMMON_SOURCES
-
-    builder:
-      type: yocto
-      work_dir: "%{GEN4_DOM0_BUILD_DIR}"
-      conf:
-        - *COMMON_CONF
-        - *DOM0_CONF
-        - [MACHINE, "%{GENERIC_MACHINE}"]
-        - [XT_DOM_NAME, "dom0"]
-        - [XT_DOMD_CONFIG_NAME, "%{GEN4_XT_DOMD_CONFIG_NAME}"]
-        - [XT_DOMD_DTB_NAME, "%{GEN4_XT_DOMD_DTB_NAME}"]
-        - [XT_GUEST_INSTALL, "domd"]
-        - [XT_XEN_DTB_NAME, "%{GEN4_XT_XEN_DTB_NAME}"]
-        - [XT_DOMD_MACHINE, "%{GEN4_MACHINE}"]
-        - [XT_DOMD_IMAGE, "%{GEN4_XT_DOMD_IMAGE}"]
-
-        # Network configuration
-        - [DOMAIN_NAME, "%{GEN4_DOMAIN_NAME}"]
-        - [HOST_NAME, "%{GEN4_DOM0_HOST_NAME}"]
-        - [DOM0_MAC, "08:00:27:ff:cf:cb"]
-
-        # Aos configuration
-        - [NODE_ID, "%{GEN4_DOM0_NODE_ID}"]
-        - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
-        - [RH850_IMAGE_VERSION, "%{RH850_IMAGE_VERSION}"]
-        - [BUNDLE_RH850_TYPE, "%{BUNDLE_RH850_TYPE}"]
-        - [RH850_IMAGE_PATH, "%{RH850_IMAGE_PATH}"]
-
-      layers:
-        - "../../../meta-virtualization"
-        - "../../../meta-openembedded/meta-oe"
-        - "../../../meta-openembedded/meta-filesystems"
-        - "../../../meta-openembedded/meta-python"
-        - "../../../meta-openembedded/meta-networking"
-        - "../../../meta-aos"
-        - "../../../meta-xt-common/meta-xt-control-domain"
-        - "../../../meta-xt-common/meta-xt-domx"
-        - "../../../meta-xt-common/meta-xt-dom0"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-domx"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-dom0"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen4/meta-aos-rcar-gen4-domx"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen4/meta-aos-rcar-gen4-dom0"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen4/meta-aos-rcar-gen4-control-domain"
-
-      build_target: core-image-thin-initramfs
-      external_src:
-        domd: "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/"
-
-      additional_deps:
-        - "%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image"
-
-      target_images:
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
   gen4-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
@@ -323,61 +270,6 @@ components:
         - "tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.ext4"
         - "tmp/deploy/images/%{GEN4_MACHINE}/aos/.unprovisioned"
-
-  gen3-dom0:
-    build-dir: "%{YOCTOS_WORK_DIR}"
-    sources:
-      - *COMMON_SOURCES
-      - *GEN3_SOURCES
-    builder:
-      type: yocto
-      work_dir: "%{GEN3_DOM0_BUILD_DIR}"
-      conf:
-        - *COMMON_CONF
-        - *DOM0_CONF
-        - [MACHINE, "%{GENERIC_MACHINE}"]
-        - [XT_DOM_NAME, "dom0"]
-        - [XT_DOMD_CONFIG_NAME, "%{GEN3_XT_DOMD_CONFIG_NAME}"]
-        - [XT_DOMD_DTB_NAME, "%{GEN3_XT_DOMD_DTB_NAME}"]
-        - [XT_GUEST_INSTALL, "domd"]
-        - [XT_XEN_DTB_NAME, "%{GEN3_XT_XEN_DTB_NAME}"]
-        - [XT_DOMD_MACHINE, "%{GEN3_MACHINE}"]
-        - [XT_DOMD_IMAGE, "%{GEN3_XT_DOMD_IMAGE}"]
-
-        # Network configuration
-        - [DOMAIN_NAME, "%{GEN3_DOMAIN_NAME}"]
-        - [HOST_NAME, "%{GEN3_DOM0_HOST_NAME}"]
-        - [DOM0_MAC, "08:00:27:ff:cb:cb"]
-
-        # Aos configuration
-        - [NODE_ID, "%{GEN3_DOM0_NODE_ID}"]
-        - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
-
-      layers:
-        - "../../../meta-virtualization"
-        - "../../../meta-openembedded/meta-oe"
-        - "../../../meta-openembedded/meta-filesystems"
-        - "../../../meta-openembedded/meta-python"
-        - "../../../meta-openembedded/meta-networking"
-        - "../../../meta-aos"
-        - "../../../meta-xt-common/meta-xt-control-domain"
-        - "../../../meta-xt-common/meta-xt-domx"
-        - "../../../meta-xt-common/meta-xt-dom0"
-        - "../../../meta-xt-rcar/meta-xt-rcar-dom0"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-domx"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-dom0"
-        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen3/meta-aos-rcar-gen3-dom0"
-
-      build_target: core-image-thin-initramfs
-      external_src:
-        domd: "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/"
-      additional_deps:
-        - "%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image"
-      target_images:
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
-        - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
   gen3-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
@@ -457,9 +349,6 @@ images:
         type: ext4
         size: 128 MiB
         files:
-          "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
-          "Image": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
-          "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
           "xen": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
           "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
@@ -469,9 +358,6 @@ images:
         type: ext4
         size: 128 MiB
         files:
-          "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
-          "Image": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
-          "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
           "xen": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
           "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
@@ -499,14 +385,228 @@ images:
         type: empty
         size: 1024 MiB
 
-      dom0_aos:
-        gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
-        type: ext4
-        size: 512 MiB
-        files:
-          "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
 parameters:
+  DOM0:
+    desc: "Select Dom0"
+    linux:
+      default: true
+      overrides:
+        components:
+          gen4-dom0:
+            default: true
+            build-dir: "%{YOCTOS_WORK_DIR}"
+            sources:
+              - *COMMON_SOURCES
+
+            builder:
+              type: yocto
+              work_dir: "%{GEN4_DOM0_BUILD_DIR}"
+              conf:
+                - *COMMON_CONF
+                - *DOM0_CONF
+                - [MACHINE, "%{GENERIC_MACHINE}"]
+                - [XT_DOM_NAME, "dom0"]
+                - [XT_DOMD_CONFIG_NAME, "%{GEN4_XT_DOMD_CONFIG_NAME}"]
+                - [XT_DOMD_DTB_NAME, "%{GEN4_XT_DOMD_DTB_NAME}"]
+                - [XT_GUEST_INSTALL, "domd"]
+                - [XT_XEN_DTB_NAME, "%{GEN4_XT_XEN_DTB_NAME}"]
+                - [XT_DOMD_MACHINE, "%{GEN4_MACHINE}"]
+                - [XT_DOMD_IMAGE, "%{GEN4_XT_DOMD_IMAGE}"]
+
+                # Network configuration
+                - [DOMAIN_NAME, "%{GEN4_DOMAIN_NAME}"]
+                - [HOST_NAME, "%{GEN4_DOM0_HOST_NAME}"]
+                - [DOM0_MAC, "08:00:27:ff:cf:cb"]
+
+                # Aos configuration
+                - [NODE_ID, "%{GEN4_DOM0_NODE_ID}"]
+                - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
+                - [RH850_IMAGE_VERSION, "%{RH850_IMAGE_VERSION}"]
+                - [BUNDLE_RH850_TYPE, "%{BUNDLE_RH850_TYPE}"]
+                - [RH850_IMAGE_PATH, "%{RH850_IMAGE_PATH}"]
+
+              layers:
+                - "../../../meta-virtualization"
+                - "../../../meta-openembedded/meta-oe"
+                - "../../../meta-openembedded/meta-filesystems"
+                - "../../../meta-openembedded/meta-python"
+                - "../../../meta-openembedded/meta-networking"
+                - "../../../meta-aos"
+                - "../../../meta-xt-common/meta-xt-control-domain"
+                - "../../../meta-xt-common/meta-xt-domx"
+                - "../../../meta-xt-common/meta-xt-dom0"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-domx"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-dom0"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen4/meta-aos-rcar-gen4-domx"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen4/meta-aos-rcar-gen4-dom0"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen4/meta-aos-rcar-gen4-control-domain"
+
+              build_target: core-image-thin-initramfs
+              external_src:
+                domd: "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/"
+
+              additional_deps:
+                - "%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image"
+
+              target_images:
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
+
+          gen3-dom0:
+            build-dir: "%{YOCTOS_WORK_DIR}"
+            sources:
+              - *COMMON_SOURCES
+              - *GEN3_SOURCES
+
+            builder:
+              type: yocto
+              work_dir: "%{GEN3_DOM0_BUILD_DIR}"
+              conf:
+                - *COMMON_CONF
+                - *DOM0_CONF
+                - [MACHINE, "%{GENERIC_MACHINE}"]
+                - [XT_DOM_NAME, "dom0"]
+                - [XT_DOMD_CONFIG_NAME, "%{GEN3_XT_DOMD_CONFIG_NAME}"]
+                - [XT_DOMD_DTB_NAME, "%{GEN3_XT_DOMD_DTB_NAME}"]
+                - [XT_GUEST_INSTALL, "domd"]
+                - [XT_XEN_DTB_NAME, "%{GEN3_XT_XEN_DTB_NAME}"]
+                - [XT_DOMD_MACHINE, "%{GEN3_MACHINE}"]
+                - [XT_DOMD_IMAGE, "%{GEN3_XT_DOMD_IMAGE}"]
+
+                # Network configuration
+                - [DOMAIN_NAME, "%{GEN3_DOMAIN_NAME}"]
+                - [HOST_NAME, "%{GEN3_DOM0_HOST_NAME}"]
+                - [DOM0_MAC, "08:00:27:ff:cb:cb"]
+
+                # Aos configuration
+                - [NODE_ID, "%{GEN3_DOM0_NODE_ID}"]
+                - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
+
+              layers:
+                - "../../../meta-virtualization"
+                - "../../../meta-openembedded/meta-oe"
+                - "../../../meta-openembedded/meta-filesystems"
+                - "../../../meta-openembedded/meta-python"
+                - "../../../meta-openembedded/meta-networking"
+                - "../../../meta-aos"
+                - "../../../meta-xt-common/meta-xt-control-domain"
+                - "../../../meta-xt-common/meta-xt-domx"
+                - "../../../meta-xt-common/meta-xt-dom0"
+                - "../../../meta-xt-rcar/meta-xt-rcar-dom0"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-domx"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-dom0"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen3/meta-aos-rcar-gen3-dom0"
+
+              build_target: core-image-thin-initramfs
+              external_src:
+                domd: "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/"
+              additional_deps:
+                - "%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image"
+              target_images:
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
+                - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
+        images:
+          gen4_full:
+            partitions:
+              boot_a:
+                files:
+                  "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
+                  "Image": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                  "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
+              boot_b:
+                files:
+                  "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
+                  "Image": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                  "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
+              dom0_aos:
+                gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
+                type: ext4
+                size: 512 MiB
+                files:
+                  "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
+
+          gen3_full:
+            partitions:
+              boot_a:
+                files:
+                  "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
+                  "Image": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                  "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
+              boot_b:
+                files:
+                  "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
+                  "Image": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                  "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
+              dom0_aos:
+                gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
+                type: ext4
+                size: 512 MiB
+                files:
+                  "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
+
+    zephyr:
+      overrides:
+        components:
+          gen4-dom0:
+            default: true
+            build-dir: "%{GEN4_ZEPHYR_DOM0_DIR}"
+            sources:
+              - *ZEPHYR_SOURCES
+
+            builder:
+              type: zephyr
+              board: xenvm_gicv3
+              target: aos_core_zephyr
+              work_dir: build
+              additional_deps:
+                - "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
+              target_images:
+                - "build/zephyr/zephyr.bin"
+
+          gen3-dom0:
+            build-dir: "%{GEN3_ZEPHYR_DOM0_DIR}"
+            sources:
+              - *ZEPHYR_SOURCES
+
+            builder:
+              type: zephyr
+              board: xenvm
+              target: aos_core_zephyr
+              work_dir: build
+              additional_deps:
+                - "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
+              target_images:
+                - "build/zephyr/zephyr.bin"
+
+        images:
+          gen4_full:
+            partitions:
+              boot_a:
+                files:
+                  "zephyr.bin": "%{GEN4_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+              boot_b:
+                files:
+                  "zephyr.bin": "%{GEN4_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+
+          gen3_full:
+            type: gpt
+            partitions:
+              boot_a:
+                files:
+                  "zephyr.bin": "%{GEN3_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+              boot_b:
+                files:
+                  "zephyr.bin": "%{GEN3_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+
   GEN3_DEVICE:
     desc: "Add RCAR Gen3-based device as Aos nodes"
     enable:
@@ -531,9 +631,6 @@ parameters:
                 type: ext4
                 size: 128 MiB
                 files:
-                  "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
-                  "Image": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
-                  "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
                   "xen": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
                   "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
                   "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
@@ -543,9 +640,6 @@ parameters:
                 type: ext4
                 size: 128 MiB
                 files:
-                  "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
-                  "Image": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
-                  "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
                   "xen": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
                   "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
                   "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
@@ -572,13 +666,6 @@ parameters:
                 gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
                 type: empty
                 size: 1024 MiB
-
-              dom0_aos:
-                gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
-                type: ext4
-                size: 512 MiB
-                files:
-                  "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
     disable:
       default: false
