@@ -22,6 +22,7 @@ IMAGE_INSTALL += " \
     aos-iamanager \
     aos-servicemanager \
     aos-updatemanager \
+    ${@bb.utils.contains('GEN3_DOM0_OS', 'zephyr', 'aos-messageproxy ', '', d)} \
 "
 
 ROOTFS_POSTPROCESS_COMMAND += "set_rootfs_version; create_unprovisioned_flag;"

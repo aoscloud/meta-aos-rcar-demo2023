@@ -7,6 +7,9 @@ variables:
   YOCTOS_WORK_DIR: "yocto"
   GENERIC_MACHINE: "generic-armv8-xt"
 
+  GEN3_DOM0_OS: "linux"
+  GEN4_DOM0_OS: "linux"
+
   # Aos unit configuration
 
   UNIT_MODEL: "rcar-demo2023"
@@ -97,7 +100,7 @@ common_data:
       rev: "c62970f"
     - type: git
       url: "https://github.com/aoscloud/meta-aos"
-      rev: "v7.0.1"
+      rev: "v7.0.4"
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
       rev: "c1ad85f"
@@ -219,6 +222,7 @@ components:
         - [XT_KERNEL_BRANCH, "%{GEN4_XT_KERNEL_BRANCH}"]
         - [XT_KERNEL_REV, "%{GEN4_XT_KERNEL_REV}"]
         - [XT_OP_TEE_FLAVOUR, "%{GEN4_XT_OPTEE_FLAVOR}"]
+        - [GEN4_DOM0_OS, "%{GEN4_DOM0_OS}"]
 
         # Network configuration
         - [DOMAIN_NAME, "%{GEN4_DOMAIN_NAME}"]
@@ -292,6 +296,7 @@ components:
         - [XT_DOM_NAME, "domd"]
         - [XT_DEVICE_TREES, "%{GEN3_XT_DOMD_DTB_NAME} %{GEN3_XT_XEN_DTB_NAME}"]
         - [XT_OP_TEE_FLAVOUR, "%{GEN3_XT_OP_TEE_FLAVOUR}"]
+        - [GEN3_DOM0_OS, "%{GEN3_DOM0_OS}"]
 
         # Network configuration
         - [DOMAIN_NAME, "%{GEN3_DOMAIN_NAME}"]
@@ -555,6 +560,10 @@ parameters:
 
     zephyr:
       overrides:
+        variables:
+          GEN3_DOM0_OS: "zephyr"
+          GEN4_DOM0_OS: "zephyr"
+
         components:
           gen4-dom0:
             default: true
