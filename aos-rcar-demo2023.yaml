@@ -81,6 +81,7 @@ variables:
   GEN4_ZEPHYR_DOM0_DIR: "gen4-zephyr-dom0"
   GEN3_ZEPHYR_DOM0_DIR: "gen3-zephyr-dom0"
 
+  GEN4_ZEPHYR_DOM0_MACHINE: "rcar_spider"
 common_data:
   # Sources used by all domains
   common_sources: &COMMON_SOURCES
@@ -553,13 +554,15 @@ parameters:
             build-dir: "%{GEN4_ZEPHYR_DOM0_DIR}"
             sources:
               - type: west
-                url: https://github.com/oleksiimoisieiev/aos_core_zephyr.git
-                rev: xrun_integration
+                url: https://github.com/dsemenets/aos_core_zephyr.git
+                rev: mmc_integration
             builder:
               type: zephyr
-              board: xenvm_gicv3
+              board: "%{GEN4_ZEPHYR_DOM0_MACHINE}"
               target: aos_core_zephyr
               work_dir: build
+              shields:
+                - "xenvm_dom0"
               additional_deps:
                 - "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image"
               target_images:
@@ -569,13 +572,15 @@ parameters:
             build-dir: "%{GEN3_ZEPHYR_DOM0_DIR}"
             sources:
               - type: west
-                url: https://github.com/oleksiimoisieiev/aos_core_zephyr.git
-                rev: xrun_integration
+                url: https://github.com/dsemenets/aos_core_zephyr.git
+                rev: mmc_integration
             builder:
               type: zephyr
-              board: xenvm
+              board: "%{GEN3_ZEPHYR_DOM0_MACHINE}"
               target: aos_core_zephyr
               work_dir: build
+              shields:
+                - "xenvm_dom0"
               additional_deps:
                 - "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image"
               target_images:
@@ -676,6 +681,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           GEN3_XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-ab-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-ab-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_h3ulcb_ca57"
 
     h3ulcb-4x2g:
       overrides:
@@ -686,6 +692,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           GEN3_XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_h3ulcb_ca57"
 
     h3ulcb-4x2g-kf:
       overrides:
@@ -696,6 +703,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           GEN3_XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-kf-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-kf-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_h3ulcb_ca57"
 
         components:
           domd:
@@ -727,6 +735,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_m3"
           GEN3_XT_DOMD_DTB_NAME: "r8a7796-m3ulcb-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a7796-m3ulcb-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_m3ulcb"
 
     salvator-x-m3:
       overrides:
@@ -737,6 +746,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_m3"
           GEN3_XT_DOMD_DTB_NAME: "r8a77960-salvator-x-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a77960-salvator-x-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_xs_m3"
 
     salvator-xs-m3-2x4g:
       # This is not misprint. This machine has 2x4 memory config
@@ -748,6 +758,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_m3_2x4g"
           GEN3_XT_DOMD_DTB_NAME: "r8a77961-salvator-xs-2x4g-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a77961-salvator-xs-2x4g-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_xs_m3_2x4g"
 
     salvator-xs-h3:
       overrides:
@@ -758,6 +769,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_h3"
           GEN3_XT_DOMD_DTB_NAME: "r8a7795-salvator-xs-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a7795-salvator-xs-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_xs_h3"
 
     salvator-xs-h3-4x2g:
       overrides:
@@ -768,6 +780,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           GEN3_XT_DOMD_DTB_NAME: "r8a7795-salvator-xs-4x2g-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a7795-salvator-xs-4x2g-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_xs_h3_4x2g"
 
     salvator-x-h3-4x2g:
       overrides:
@@ -778,6 +791,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           GEN3_XT_DOMD_DTB_NAME: "r8a7795-salvator-x-4x2g-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a7795-salvator-x-4x2g-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_x_h3_4x2g"
 
     salvator-x-h3:
       overrides:
@@ -788,6 +802,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_h3"
           GEN3_XT_DOMD_DTB_NAME: "r8a7795-salvator-x-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a7795-salvator-x-xen.dtb"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_x_h3"
 
   # Aos VIS data provider
   VIS_DATA_PROVIDER:
