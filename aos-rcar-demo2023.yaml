@@ -607,9 +607,14 @@ parameters:
               boot_a:
                 files:
                   "zephyr.bin": "%{GEN4_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+                  "linux-domd": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
+                  "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/aos-image-initramfs-%{GEN4_MACHINE}.cpio.gz"
               boot_b:
                 files:
                   "zephyr.bin": "%{GEN4_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+                  "linux-domd": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
+                  "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/aos-image-initramfs-%{GEN4_MACHINE}.cpio.gz"
+
 
           gen3_full:
             type: gpt
@@ -617,9 +622,14 @@ parameters:
               boot_a:
                 files:
                   "zephyr.bin": "%{GEN3_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+                  "linux-domd": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
+                  "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/aos-image-initramfs-%{GEN3_MACHINE}.cpio.gz"
+
               boot_b:
                 files:
                   "zephyr.bin": "%{GEN3_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+                  "linux-domd": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
+                  "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/aos-image-initramfs-%{GEN3_MACHINE}.cpio.gz"
 
   GEN3_DEVICE:
     desc: "Add RCAR Gen3-based device as Aos nodes"
