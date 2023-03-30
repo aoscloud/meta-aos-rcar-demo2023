@@ -53,9 +53,11 @@ variables:
 
   GEN4_MACHINE: "spider"
   GEN4_SOC_FAMILY: "r8a779f0"
-
+  GEN4_ZEPHYR_DOM0_MACHINE: "rcar_spider"
+  
   GEN4_DOM0_BUILD_DIR: "build/gen4/dom0"
   GEN4_DOMD_BUILD_DIR: "build/gen4/domd"
+  GEN4_ZEPHYR_DOM0_DIR: "zephyr/gen4-dom0"
 
   GEN4_XT_DOMD_DTB_NAME: "%{GEN4_SOC_FAMILY}-%{GEN4_MACHINE}-domd.dtb"
   GEN4_XT_XEN_DTB_NAME: "%{GEN4_SOC_FAMILY}-%{GEN4_MACHINE}-xen.dtb"
@@ -72,16 +74,13 @@ variables:
 
   GEN3_DOM0_BUILD_DIR: "build/gen3/dom0"
   GEN3_DOMD_BUILD_DIR: "build/gen3/domd"
+  GEN3_ZEPHYR_DOM0_DIR: "zephyr/gen3-dom0"
 
   GEN3_XT_DOMD_DTB_NAME: "%{GEN3_SOC_FAMILY}-%{GEN3_MACHINE}-domd.dtb"
   GEN3_XT_XEN_DTB_NAME: "%{GEN3_SOC_FAMILY}-%{GEN3_MACHINE}-xen.dtb"
 
   GEN3_XT_DOMD_IMAGE: "core-image-minimal"
 
-  GEN4_ZEPHYR_DOM0_DIR: "gen4-zephyr-dom0"
-  GEN3_ZEPHYR_DOM0_DIR: "gen3-zephyr-dom0"
-
-  GEN4_ZEPHYR_DOM0_MACHINE: "rcar_spider"
 common_data:
   # Sources used by all domains
   common_sources: &COMMON_SOURCES
@@ -191,7 +190,6 @@ common_data:
     - [IMAGE_FSTYPES_append, " ext4"]
 
 components:
-
   gen4-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
     sources:
@@ -277,6 +275,7 @@ components:
         url: https://github.com/xen-troops/meta-renesas.git
         rev: "Renesas-Yocto-v5.1-patched"
         dir: "meta-renesas-gen3"
+
     builder:
       type: yocto
       work_dir: "%{GEN3_DOMD_BUILD_DIR}"
@@ -385,7 +384,7 @@ images:
 parameters:
   DOM0:
     desc: "Select Dom0"
-    "linux":
+    linux:
       default: true
       overrides:
         components:
@@ -513,6 +512,7 @@ parameters:
                   "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
                   "Image": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
                   "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
               boot_b:
                 items:
                   "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
@@ -546,7 +546,7 @@ parameters:
                 files:
                   "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
-    "zephyr":
+    zephyr:
       overrides:
         components:
           gen4-dom0:
@@ -556,6 +556,7 @@ parameters:
               - type: west
                 url: https://github.com/aoscloud/aos_core_zephyr.git
                 rev: integration
+
             builder:
               type: zephyr
               board: "%{GEN4_ZEPHYR_DOM0_MACHINE}"
@@ -574,6 +575,7 @@ parameters:
               - type: west
                 url: https://github.com/aoscloud/aos_core_zephyr.git
                 rev: integration
+
             builder:
               type: zephyr
               board: "%{GEN3_ZEPHYR_DOM0_MACHINE}"
