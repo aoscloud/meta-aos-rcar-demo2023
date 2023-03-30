@@ -268,12 +268,12 @@ components:
         - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen4/meta-aos-rcar-gen4-driver-domain"
 
       target_images:
-        - "tmp/deploy/images/%{GEN4_MACHINE}/Image"
         - "tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
         - "tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.ext4"
         - "tmp/deploy/images/%{GEN4_MACHINE}/aos/.unprovisioned"
+        - "tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
 
   gen3-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
@@ -338,12 +338,12 @@ components:
         - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen3/meta-aos-rcar-gen3-domd"
 
       target_images:
-        - "tmp/deploy/images/%{GEN3_MACHINE}/Image"
         - "tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
         - "tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
         - "tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{GEN3_MACHINE}/core-image-minimal-%{GEN3_MACHINE}.ext4"
         - "tmp/deploy/images/%{GEN3_MACHINE}/aos/.unprovisioned"
+        - "tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
 
 images:
   gen4_full:
@@ -451,9 +451,9 @@ parameters:
               build_target: core-image-thin-initramfs
               external_src:
                 domd: "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/"
-
+ 
               additional_deps:
-                - "%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image"
+                - "%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
 
               target_images:
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
@@ -509,8 +509,10 @@ parameters:
               build_target: core-image-thin-initramfs
               external_src:
                 domd: "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/"
+
               additional_deps:
-                - "%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image"
+                - "%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
+
               target_images:
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
