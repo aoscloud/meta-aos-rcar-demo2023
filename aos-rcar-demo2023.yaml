@@ -261,6 +261,7 @@ components:
 
       target_images:
         - "tmp/deploy/images/%{GEN4_MACHINE}/Image"
+        - "tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
         - "tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
         - "tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
@@ -329,6 +330,7 @@ components:
 
       target_images:
         - "tmp/deploy/images/%{GEN3_MACHINE}/Image"
+        - "tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
         - "tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
         - "tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
         - "tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
@@ -443,7 +445,7 @@ parameters:
                 domd: "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/"
 
               additional_deps:
-                - "%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image"
+                - "%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
 
               target_images:
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
@@ -499,7 +501,7 @@ parameters:
               external_src:
                 domd: "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/"
               additional_deps:
-                - "%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image"
+                - "%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
               target_images:
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
