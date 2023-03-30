@@ -199,7 +199,6 @@ common_data:
     - [IMAGE_FSTYPES_append, " ext4"]
 
 components:
-
   gen4-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
     sources:
@@ -286,6 +285,7 @@ components:
         url: https://github.com/xen-troops/meta-renesas.git
         rev: "Renesas-Yocto-v5.1-patched"
         dir: "meta-renesas-gen3"
+
     builder:
       type: yocto
       work_dir: "%{GEN3_DOMD_BUILD_DIR}"
