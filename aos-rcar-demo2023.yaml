@@ -221,7 +221,7 @@ components:
         - [DHCP_NET, "%{GEN4_DHCP_NET}"]
         - [DOM0_IP, "%{GEN4_DOM0_IP}"]
         - [GEN3_DHCP_NET, "%{GEN3_DHCP_NET}"]
-        - [DNSMASQ_INTERFACES, "tsn1"]
+        - [DNSMASQ_INTERFACES, "tsn0 tsn1"]
         - [DNSMASQ_SERVERS, "/%{GEN3_DOMAIN_NAME}/10.0.0.2"]
         - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DHCP_NET}.1"]
 
