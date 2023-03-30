@@ -1,5 +1,5 @@
 desc: "Aos virtual development machine"
-min_ver: "0.14"
+min_ver: "0.15"
 
 variables:
   # Common build configuration
