@@ -52,9 +52,9 @@ variables:
   GEN3_DOM0_HOST_NAME: "dom0"
   GEN3_DOMD_HOST_NAME: "domd"
   GEN3_DHCP_NET: "10.0.2"
-  GEN3_DOMD_IP: "10.0.2.1"
   GEN3_DOM0_IP: "10.0.2.2"
-
+  GEN3_DOMD_IP: "10.0.2.1"
+  
   # Gen4 build configuration
 
   GEN4_MACHINE: "spider"
@@ -226,7 +226,7 @@ components:
         - [DOM0_HOST_NAME, "%{GEN4_DOM0_HOST_NAME}"]
         - [DHCP_NET, "%{GEN4_DHCP_NET}"]
         - [DOM0_IP, "%{GEN4_DOM0_IP}"]
-        - [DOMD_IP, "%{GEN4_DOM0_IP}"]
+        - [DOMD_IP, "%{GEN4_DOMD_IP}"]
         - [GEN3_DHCP_NET, "%{GEN3_DHCP_NET}"]
         - [DNSMASQ_INTERFACES, "tsn1"]
         - [DNSMASQ_SERVERS, "/%{GEN3_DOMAIN_NAME}/10.0.0.2"]
