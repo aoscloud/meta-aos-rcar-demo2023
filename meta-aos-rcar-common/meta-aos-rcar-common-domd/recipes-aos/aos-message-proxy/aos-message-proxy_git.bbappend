@@ -2,7 +2,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI += " \
     file://optee-identity.conf \
-    file://simple-service.conf \
 "
 
 FILES_${PN} += " \
@@ -12,7 +11,6 @@ FILES_${PN} += " \
 do_install_append() {
     install -d ${D}${sysconfdir}/systemd/system/${PN}.service.d
     install -m 0644 ${WORKDIR}/optee-identity.conf ${D}${sysconfdir}/systemd/system/${PN}.service.d/10-optee-identity.conf
-    install -m 0644 ${WORKDIR}/simple-service.conf ${D}${sysconfdir}/systemd/system/${PN}.service.d/10-simple-service.conf
 }
 
 python do_update_config() {
