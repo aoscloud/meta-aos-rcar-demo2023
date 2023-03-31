@@ -226,7 +226,7 @@ components:
         - [GEN3_DHCP_NET, "%{GEN3_DHCP_NET}"]
         - [DNSMASQ_INTERFACES, "tsn1"]
         - [DNSMASQ_SERVERS, "/%{GEN3_DOMAIN_NAME}/10.0.0.2"]
-        - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DHCP_NET}.1"]
+        - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DOMD_IP}"]
 
         # Aos configuration
         - [NODE_ID, "%{GEN4_DOMD_NODE_ID}"]
@@ -299,7 +299,7 @@ components:
         - [DOM0_IP, "%{GEN3_DOM0_IP}"]
         - [DOMD_IP, "%{GEN3_DOMD_IP}"]
         - [DNSMASQ_INTERFACES, "eth0"]
-        - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DHCP_NET}.1"]
+        - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DOMD_IP}"]
 
         # Aos configuration
         - [NODE_ID, "%{GEN3_DOMD_NODE_ID}"]
