@@ -380,12 +380,6 @@ images:
         type: empty
         size: 1024 MiB
 
-      dom0_aos:
-        gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
-        type: ext4
-        size: 512 MiB
-        files:
-          "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
 parameters:
   DOM0:
@@ -526,6 +520,12 @@ parameters:
                   "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
                   "Image": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
                   "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+              dom0_aos:
+                gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
+                type: ext4
+                size: 512 MiB
+                files:
+                  "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
           gen3_full:
             partitions:
@@ -540,6 +540,13 @@ parameters:
                   "/aos/version": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
                   "Image": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
                   "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
+              dom0_aos:
+                gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
+                type: ext4
+                size: 512 MiB
+                files:
+                  "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
     zephyr:
       overrides:
@@ -673,13 +680,6 @@ parameters:
                 gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
                 type: empty
                 size: 1024 MiB
-
-              dom0_aos:
-                gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
-                type: ext4
-                size: 512 MiB
-                files:
-                  "/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
     disable:
       default: false
