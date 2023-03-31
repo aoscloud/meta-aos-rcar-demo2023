@@ -35,7 +35,7 @@ do_install_append() {
     # DHCP settings for dom0
     echo "dhcp-host=xenbr0,${DOM0_HOST_NAME},${DOM0_IP},infinite" >> ${D}${sysconfdir}/dnsmasq.conf
     # Add domd host
-    echo "address=/${HOST_NAME}.${DOMAIN_NAME}/${DHCP_NET}.1" >> ${D}${sysconfdir}/dnsmasq.conf
+    echo "address=/${HOST_NAME}.${DOMAIN_NAME}/${DOMD_IP}" >> ${D}${sysconfdir}/dnsmasq.conf
     # Add additional interfaces
     for interface in ${DNSMASQ_INTERFACES}; do
         echo "interface=${interface}" >> ${D}${sysconfdir}/dnsmasq.conf

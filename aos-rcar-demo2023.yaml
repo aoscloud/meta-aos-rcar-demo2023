@@ -43,12 +43,14 @@ variables:
   GEN4_DOMD_HOST_NAME: "domd"
   GEN4_DHCP_NET: "10.0.1"
   GEN4_DOM0_IP: "10.0.1.2"
+  GEN4_DOMD_IP: "10.0.1.1"
 
   GEN3_DOMAIN_NAME: "gen3"
   GEN3_DOM0_HOST_NAME: "dom0"
   GEN3_DOMD_HOST_NAME: "domd"
   GEN3_DHCP_NET: "10.0.2"
   GEN3_DOM0_IP: "10.0.2.2"
+  GEN3_DOMD_IP: "10.0.2.1"
 
   NODE_ADDRESSES: "%{GEN4_DOMD_HOST_NAME}.%{GEN4_DOMAIN_NAME} %{GEN4_DOM0_HOST_NAME}.%{GEN4_DOMAIN_NAME}"
 
@@ -230,6 +232,7 @@ components:
         - [DOM0_HOST_NAME, "%{GEN4_DOM0_HOST_NAME}"]
         - [DHCP_NET, "%{GEN4_DHCP_NET}"]
         - [DOM0_IP, "%{GEN4_DOM0_IP}"]
+        - [DOMD_IP, "%{GEN4_DOMD_IP}"]
         - [GEN3_DHCP_NET, "%{GEN3_DHCP_NET}"]
         - [DNSMASQ_INTERFACES, "tsn1"]
         - [DNSMASQ_SERVERS, "/%{GEN3_DOMAIN_NAME}/10.0.0.2"]
@@ -305,6 +308,7 @@ components:
         - [DOM0_HOST_NAME, "%{GEN3_DOM0_HOST_NAME}"]
         - [DHCP_NET, "%{GEN3_DHCP_NET}"]
         - [DOM0_IP, "%{GEN3_DOM0_IP}"]
+        - [DOMD_IP, "%{GEN3_DOMD_IP}"]
         - [DNSMASQ_INTERFACES, "eth0"]
         - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DHCP_NET}.1"]
 
@@ -566,6 +570,8 @@ parameters:
         variables:
           GEN3_DOM0_OS: "zephyr"
           GEN4_DOM0_OS: "zephyr"
+          GEN4_DOMD_IP: "10.0.0.1"
+          GEN3_DOMD_IP: "10.0.0.2"
 
         components:
           gen4-dom0:
