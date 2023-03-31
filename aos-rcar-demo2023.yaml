@@ -29,9 +29,13 @@ variables:
 
   GEN4_DOMD_NODE_ID: "gen4-domd"
   GEN4_DOM0_NODE_ID: "gen4-dom0"
+  GEN4_DOMD_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN4_DOMD_NODE_ID}"
+  GEN4_DOM0_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN4_DOMD_NODE_ID}"
 
   GEN3_DOMD_NODE_ID: "gen3-domd"
   GEN3_DOM0_NODE_ID: "gen3-dom0"
+  GEN3_DOMD_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN3_DOMD_NODE_ID}"
+  GEN3_DOM0_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN3_DOMD_NODE_ID}"
 
   NODE_LIST: "%{GEN4_DOMD_NODE_ID} %{GEN4_DOM0_NODE_ID}"
   UM_LIST: "%{GEN4_DOMD_NODE_ID}"
@@ -240,7 +244,7 @@ components:
 
         # Aos configuration
         - [NODE_ID, "%{GEN4_DOMD_NODE_ID}"]
-        - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
+        - [NODE_TYPE, "%{GEN4_DOMD_NODE_TYPE}"]
         - [NODE_LIST, "%{NODE_LIST}"]
         - [UM_LIST, "%{UM_LIST}"]
         - [NODE_ADDRESSES, "%{NODE_ADDRESSES}"]
@@ -314,7 +318,7 @@ components:
 
         # Aos configuration
         - [NODE_ID, "%{GEN3_DOMD_NODE_ID}"]
-        - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
+        - [NODE_TYPE, "%{GEN3_DOMD_NODE_TYPE}"]
 
       build_target: "%{GEN3_XT_DOMD_IMAGE}"
       layers:
@@ -431,7 +435,7 @@ parameters:
 
                 # Aos configuration
                 - [NODE_ID, "%{GEN4_DOM0_NODE_ID}"]
-                - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
+                - [NODE_TYPE, "%{GEN4_DOM0_NODE_TYPE}"]
                 - [RH850_IMAGE_VERSION, "%{RH850_IMAGE_VERSION}"]
                 - [BUNDLE_RH850_TYPE, "%{BUNDLE_RH850_TYPE}"]
                 - [RH850_IMAGE_PATH, "%{RH850_IMAGE_PATH}"]
@@ -493,7 +497,7 @@ parameters:
 
                 # Aos configuration
                 - [NODE_ID, "%{GEN3_DOM0_NODE_ID}"]
-                - [NODE_TYPE, "%{UNIT_MODEL}-%{UNIT_VERSION}-${NODE_ID}"]
+                - [NODE_TYPE, "%{GEN3_DOM0_NODE_TYPE}"]
 
               layers:
                 - "../../../meta-virtualization"
@@ -572,6 +576,8 @@ parameters:
           GEN4_DOM0_OS: "zephyr"
           GEN4_DOMD_IP: "10.0.0.1"
           GEN3_DOMD_IP: "10.0.0.2"
+          GEN4_DOMD_NODE_TYPE: "zephyr-%{GEN4_DOMD_NODE_ID}"
+          GEN3_DOMD_NODE_TYPE: "zephyr-%{GEN3_DOMD_NODE_ID}"
 
         components:
           gen4-dom0:
