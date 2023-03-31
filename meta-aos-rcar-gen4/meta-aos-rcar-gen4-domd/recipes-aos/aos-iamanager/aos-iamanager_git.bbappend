@@ -26,11 +26,11 @@ python do_update_config_append() {
 
     data["RemoteIams"] = []
 
-    node_addresses = d.getVar("NODE_ADDRESSES").split()
+    iam_addresses = d.getVar("REMOTE_IAMS_ADDRESSES").split()
 
-    for i, node in enumerate(d.getVar("NODE_LIST").split()):
-        if node != d.getVar("NODE_ID"):
-            data["RemoteIams"].append({"NodeID": node, "URL": node_addresses[i]+":8089"})
+    for i, iam in enumerate(d.getVar("REMOTE_IAMS").split()):
+        if iam != d.getVar("NODE_ID"):
+            data["RemoteIams"].append({"NodeID": iam, "URL": iam_addresses[i]+":8089"})
 
     with open(file_name, "w") as f:
         json.dump(data, f, indent=4)
