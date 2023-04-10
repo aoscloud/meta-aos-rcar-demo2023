@@ -345,6 +345,7 @@ components:
         - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-domx"
         - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-domd"
         - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen3/meta-aos-rcar-gen3-domd"
+        - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen3/meta-aos-rcar-gen3-domx"
 
       target_images:
         - "tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
@@ -713,6 +714,7 @@ parameters:
                 - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-domx"
                 - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-common/meta-aos-rcar-common-dom0"
                 - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen3/meta-aos-rcar-gen3-dom0"
+                - "../../../meta-aos-rcar-demo2023/meta-aos-rcar-gen3/meta-aos-rcar-gen3-domx"
 
               build_target: core-image-thin-initramfs
               external_src:
