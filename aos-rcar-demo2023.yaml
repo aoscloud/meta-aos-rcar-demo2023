@@ -1,5 +1,5 @@
 desc: "Aos virtual development machine"
-min_ver: "0.15"
+min_ver: "0.18"
 
 variables:
   # Common build configuration
@@ -24,6 +24,8 @@ variables:
   BUNDLE_RH850_TYPE: ""
   RH850_IMAGE_VERSION: "1.0.0"
   RH850_IMAGE_PATH: "${TOPDIR}/../../../../sample_image_RH850/v1.0/OTA_AlcoholApp_Image"
+  GEN3_FOTA_WORK_DIR: "fota-gen3"
+  GEN4_FOTA_WORK_DIR: "fota-gen4"
 
   # Aos node configuration
 
@@ -205,6 +207,83 @@ common_data:
     - [IMAGE_FSTYPES_append, " ext4"]
 
 components:
+  gen4_fota:
+    builder:
+      type: custom_script
+      work_dir: "%{GEN4_FOTA_WORK_DIR}"
+      script: "yocto/meta-aos/scripts/fota_builder.py"
+      args: "-v"
+      ostree_repo: "rootfs_repo/gen4"
+      components:
+        dom0:
+          enabled: true
+          vendorVersion: "%{BUNDLE_IMAGE_VERSION}"
+          fileName: "%{UNIT_MODEL}-%{UNIT_VERSION}-dom0-%{BUNDLE_DOM0_TYPE}-%{BUNDLE_IMAGE_VERSION}.gz"
+          description: "DomD image"
+          method: "raw"
+          partition:
+            gpt_type: c95b646c-6a24-4543-8a4f-4e60f6800e5d # BIOS boot partition (kinda...)
+            type: ext4
+            size: 128
+            label: "boot"
+            items:
+              "xen": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
+              "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
+              "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
+        domd:
+          enabled: true
+          method: "overlay"
+          type: "full"
+          description: "DomD image"
+          vendorVersion: "%{BUNDLE_IMAGE_VERSION}"
+          fileName: "%{UNIT_MODEL}-%{UNIT_VERSION}-domd-%{BUNDLE_DOM0_TYPE}-%{BUNDLE_IMAGE_VERSION}.squashfs"
+          exclude:
+            - "/var/*"
+          rootfs: "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.tar.bz2"
+      additional_deps:
+        - "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
+        - "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
+        - "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
+        - "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.tar.bz2"
+
+  gen3_fota:
+    builder:
+      type: custom_script
+      work_dir: "%{GEN3_FOTA_WORK_DIR}"
+      script: "yocto/meta-aos/scripts/fota_builder.py"
+      args: "-v"
+      ostree_repo: "rootfs_repo/gen4"
+      components:
+        dom0:
+          enabled: true
+          vendorVersion: "%{BUNDLE_IMAGE_VERSION}"
+          fileName: "%{UNIT_MODEL}-%{UNIT_VERSION}-dom0-%{BUNDLE_DOM0_TYPE}-%{BUNDLE_IMAGE_VERSION}.gz"
+          method: "raw"
+          partition:
+            gpt_type: ff562e4c-45a3-4437-afb8-bbfe4975e329 # BIOS boot partition (kinda...)
+            type: ext4
+            size: 128
+            label: "boot"
+            items:
+              "xen": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
+              "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
+              "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
+        domd:
+          enabled: true
+          method: "overlay"
+          vendorVersion: "%{BUNDLE_IMAGE_VERSION}"
+          type: "full"
+          fileName: "%{UNIT_MODEL}-%{UNIT_VERSION}-domd-%{BUNDLE_DOM0_TYPE}-%{BUNDLE_IMAGE_VERSION}.squashfs"
+          description: "DomD image"
+          exclude:
+            - "/var/*"
+          rootfs: "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/core-image-minimal-%{GEN3_MACHINE}.tar.bz2"
+      additional_deps:
+        - "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
+        - "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
+        - "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
+        - "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/core-image-minimal-%{GEN3_MACHINE}.tar.bz2"
+
   gen4-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
     sources:
@@ -280,6 +359,7 @@ components:
         - "tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.ext4"
+        - "tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.tar.bz2"
         - "tmp/deploy/images/%{GEN4_MACHINE}/aos/.unprovisioned"
         - "tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
 
@@ -352,6 +432,7 @@ components:
         - "tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
         - "tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{GEN3_MACHINE}/core-image-minimal-%{GEN3_MACHINE}.ext4"
+        - "tmp/deploy/images/%{GEN3_MACHINE}/core-image-minimal-%{GEN3_MACHINE}.tar.bz2"
         - "tmp/deploy/images/%{GEN3_MACHINE}/aos/.unprovisioned"
         - "tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
 
@@ -400,7 +481,6 @@ images:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
         type: empty
         size: 1024 MiB
-
 
 parameters:
   GEN3_DEVICE:
@@ -608,6 +688,36 @@ parameters:
       default: true
       overrides:
         components:
+          gen4_fota:
+            builder:
+              type: custom_script
+              components:
+                dom0:
+                  partition:
+                    items:
+                      "Image": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                      "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+              target_images:
+                - "%{UNIT_MODEL}-%{UNIT_VERSION}-linux-gen4-%{BUNDLE_IMAGE_VERSION}.tar"
+              additional_deps:
+                - "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                - "%{YOCTOS_WORK_DIR}/%{GEN4_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
+          gen3_fota:
+            builder:
+              type: custom_script
+              components:
+                dom0:
+                  partition:
+                    items:
+                      "Image": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                      "uInitramfs": "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+              target_images:
+                - "%{UNIT_MODEL}-%{UNIT_VERSION}-linux-gen3-%{BUNDLE_IMAGE_VERSION}.tar"
+              additional_deps:
+                - "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+                - "%{YOCTOS_WORK_DIR}/%{GEN3_DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+
           gen4-dom0:
             default: true
             build-dir: "%{YOCTOS_WORK_DIR}"
@@ -728,6 +838,7 @@ parameters:
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
+
         images:
           gen4_full:
             partitions:
@@ -784,6 +895,32 @@ parameters:
           REMOTE_IAMS_ADDRESSES: "%{GEN3_DOMD_HOST_NAME}.%{GEN3_DOMAIN_NAME}"
 
         components:
+          gen4_fota:
+            builder:
+              type: custom_script
+              components:
+                dom0:
+                  partition:
+                    items:
+                      "zephyr.bin": "%{GEN4_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+              target_images:
+                - "%{UNIT_MODEL}-%{UNIT_VERSION}-zephyr-gen4-%{BUNDLE_IMAGE_VERSION}.tar"
+              additional_deps:
+                - "%{GEN4_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+
+          gen3_fota:
+            builder:
+              type: custom_script
+              components:
+                dom0:
+                  partition:
+                    items:
+                      "zephyr.bin": "%{GEN3_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+              target_images:
+                - "%{UNIT_MODEL}-%{UNIT_VERSION}-zephyr-gen3-%{BUNDLE_IMAGE_VERSION}.tar"
+              additional_deps:
+                - "%{GEN3_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
+
           gen4-dom0:
             default: true
             build-dir: "%{GEN4_ZEPHYR_DOM0_DIR}"
