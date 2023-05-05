@@ -503,7 +503,7 @@ parameters:
           GEN3_ZEPHYR_DOM0_MACHINE: "rcar_h3ulcb_ca57"
 
         components:
-          domd:
+          gen3-domd:
             sources:
               - type: git
                 url: "https://github.com/CogentEmbedded/meta-rcar.git"
@@ -516,7 +516,7 @@ parameters:
                 # Ignore OP-TEE patches as we have own OP-TEE
                 - [BBMASK_append, " meta-rcar-gen3-adas/recipes-bsp/optee"]
 
-        images:
+        gen3_full:
           full:
             partitions:
               domd_rootfs:
