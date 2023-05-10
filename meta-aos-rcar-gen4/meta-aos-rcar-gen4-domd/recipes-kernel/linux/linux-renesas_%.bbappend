@@ -44,3 +44,11 @@ python __anonymous () {
 
 KERNEL_MODULE_PROBECONF += "ixgbevf"
 module_conf_ixgbevf = "blacklist ixgbevf"
+
+do_configure_append() {
+    if ${@bb.utils.contains('GEN4_DOM0_OS', 'zephyr', 'true', 'false', d)}; then
+        sed -i -e 's/dom0_mem=.[^\s]* /dom0_mem=256M /' ${S}/arch/arm64/boot/dts/renesas/xen-chosen.dtsi
+    else
+        sed -i -e 's/dom0_mem=.[^\s]* /dom0_mem=1024M /' ${S}/arch/arm64/boot/dts/renesas/xen-chosen.dtsi
+    fi
+}
