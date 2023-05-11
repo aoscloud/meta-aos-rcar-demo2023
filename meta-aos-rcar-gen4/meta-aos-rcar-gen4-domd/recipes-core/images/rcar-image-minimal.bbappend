@@ -29,7 +29,7 @@ IMAGE_INSTALL += " \
     aos-communicationmanager \
     aos-servicemanager \
     aos-updatemanager \
-    ${@bb.utils.contains('GEN3_DOM0_OS', 'zephyr', 'aos-messageproxy ', '', d)} \
+    ${@bb.utils.contains('GEN4_DOM0_OS', 'zephyr', 'aos-messageproxy ', '', d)} \
 "
 
 ROOTFS_POSTPROCESS_COMMAND += "set_unit_model; set_rootfs_version; create_unprovisioned_flag;"
