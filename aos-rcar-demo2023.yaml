@@ -113,13 +113,13 @@ common_data:
       rev: "c1ad85f"
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-demo2023"
-      rev: "v0.3.0"
+      rev: "develop"
 
   # Zephyr sources
   zephyr_sources: &ZEPHYR_SOURCES
     - type: west
       url: "https://github.com/aoscloud/aos_core_zephyr.git"
-      rev: "v0.1.0"
+      rev: "develop"
 
   # Sources to be used in DomD
   domd_sources: &DOMD_SOURCES
