@@ -1,5 +1,5 @@
 desc: "Aos virtual development machine"
-min_ver: "0.15"
+min_ver: "0.19"
 
 variables:
   # Common build configuration
@@ -358,7 +358,8 @@ components:
 images:
   gen4_full:
     type: gpt
-    desc: "Full SD-card/eMMC image"
+    desc: "Full UFS image"
+    sector_size: 4096
     partitions:
       boot_a:
         gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
