@@ -1,5 +1,5 @@
 desc: "Aos virtual development machine"
-min_ver: "0.15"
+min_ver: "0.18"
 
 variables:
   # Common build configuration
@@ -205,6 +205,26 @@ common_data:
     - [IMAGE_FSTYPES_append, " ext4"]
 
 components:
+  layer:
+    builder:
+      type: custom_script
+      work_dir: "layer-work"
+      script: "meta-aos/scripts/custom-yocto.py"
+      args: ""
+      layers:
+        yocto_dir: "%{YOCTOS_WORK_DIR}"
+        items:
+          gen3_domd_nodejs:
+            enabled: true
+            dir: "%{GEN3_DOMD_BUILD_DIR}"
+            target: "nodejs-layer"
+          gen4_domd_nodejs:
+            enabled: true
+            dir: "%{GEN4_DOMD_BUILD_DIR}"
+            target: "nodejs-layer"
+      target_images:
+        - "Image"
+
   gen4-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
     sources:
