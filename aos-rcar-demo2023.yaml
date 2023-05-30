@@ -556,7 +556,7 @@ parameters:
           GEN3_XT_OP_TEE_FLAVOUR: "salvator_m3_2x4g"
           GEN3_XT_DOMD_DTB_NAME: "r8a77961-salvator-xs-2x4g-domd.dtb"
           GEN3_XT_XEN_DTB_NAME: "r8a77961-salvator-xs-2x4g-xen.dtb"
-          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_xs_m3_2x4g"
+          GEN3_ZEPHYR_DOM0_MACHINE: "rcar_salvator_xs_m3"
 
     salvator-xs-h3:
       overrides:
