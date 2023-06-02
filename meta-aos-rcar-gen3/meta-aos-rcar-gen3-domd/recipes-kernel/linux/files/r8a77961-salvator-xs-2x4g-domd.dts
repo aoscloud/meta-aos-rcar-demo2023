@@ -62,3 +62,7 @@
 &sound_card {
 	dais = <&rsnd_port0>; /* ak4613 */
 };
+
+&sdhi2 {
+	status = "disabled";
+};
