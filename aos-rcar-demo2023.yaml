@@ -30,12 +30,12 @@ variables:
   GEN4_DOMD_NODE_ID: "gen4-domd"
   GEN4_DOM0_NODE_ID: "gen4-dom0"
   GEN4_DOMD_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN4_DOMD_NODE_ID}"
-  GEN4_DOM0_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN4_DOMD_NODE_ID}"
+  GEN4_DOM0_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN4_DOM0_NODE_ID}"
 
   GEN3_DOMD_NODE_ID: "gen3-domd"
   GEN3_DOM0_NODE_ID: "gen3-dom0"
   GEN3_DOMD_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN3_DOMD_NODE_ID}"
-  GEN3_DOM0_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN3_DOMD_NODE_ID}"
+  GEN3_DOM0_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN3_DOM0_NODE_ID}"
 
   NODE_LIST: "%{GEN4_DOMD_NODE_ID} %{GEN4_DOM0_NODE_ID}"
   REMOTE_IAMS: "%{GEN4_DOM0_NODE_ID}"
@@ -402,7 +402,6 @@ images:
         type: empty
         size: 1024 MiB
 
-
 parameters:
   GEN3_DEVICE:
     desc: "Add RCAR Gen3-based device as Aos nodes"
@@ -661,7 +660,7 @@ parameters:
               build_target: core-image-thin-initramfs
               external_src:
                 domd: "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/"
- 
+
               additional_deps:
                 - "%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
 
@@ -834,7 +833,6 @@ parameters:
                   "zephyr.bin": "%{GEN4_ZEPHYR_DOM0_DIR}/build/zephyr/zephyr.bin"
                   "linux-domd": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
                   "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/aos-image-initramfs-%{GEN4_MACHINE}.cpio.gz"
-
 
           gen3_full:
             type: gpt
