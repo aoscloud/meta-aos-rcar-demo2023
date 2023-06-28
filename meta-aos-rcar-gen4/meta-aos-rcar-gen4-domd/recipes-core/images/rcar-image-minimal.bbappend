@@ -1,5 +1,4 @@
-# Enable RO rootfs
-IMAGE_FEATURES_append = " read-only-rootfs"
+require recipes-core/images/aos-image.inc
 
 IMAGE_INSTALL += " \
     pciutils \
@@ -7,13 +6,14 @@ IMAGE_INSTALL += " \
     iccom-support \
     optee-test \
     block \
+    iputils \
 "
 
 IMAGE_INSTALL += "iproute2 iproute2-tc tcpdump nvme-cli"
 
-IMAGE_INSTALL += " kernel-module-nvme-core kernel-module-nvme"
+IMAGE_INSTALL += "kernel-module-nvme-core kernel-module-nvme"
 
-IMAGE_INSTALL += " kernel-module-ixgbe"
+IMAGE_INSTALL += "kernel-module-ixgbe"
 
 IMAGE_INSTALL += "e2fsprogs"
 
@@ -24,29 +24,7 @@ IMAGE_INSTALL += " \
 
 # Aos components
 IMAGE_INSTALL += " \
-    aos-vis \
-    aos-iamanager \
-    aos-communicationmanager \
-    aos-servicemanager \
-    aos-updatemanager \
     ${@bb.utils.contains('GEN4_DOM0_OS', 'zephyr', 'aos-messageproxy ', '', d)} \
 "
 
-ROOTFS_POSTPROCESS_COMMAND += "set_unit_model; set_rootfs_version; create_unprovisioned_flag;"
-
-set_unit_model() {
-    install -d ${IMAGE_ROOTFS}/etc/aos
-
-    echo "${UNIT_MODEL};${UNIT_VERSION}" > ${IMAGE_ROOTFS}/etc/aos/unit_model
-}
-
-set_rootfs_version() {
-    install -d ${IMAGE_ROOTFS}/etc/aos
-
-    echo "VERSION=\"${DOMD_IMAGE_VERSION}\"" > ${IMAGE_ROOTFS}/etc/aos/version
-}
-
-create_unprovisioned_flag() {
-    install -d ${DEPLOY_DIR_IMAGE}/aos
-    touch ${DEPLOY_DIR_IMAGE}/aos/.unprovisioned
-}
+AOS_ROOTFS_IMAGE_VERSION = "${AOS_DOMD_IMAGE_VERSION}"
