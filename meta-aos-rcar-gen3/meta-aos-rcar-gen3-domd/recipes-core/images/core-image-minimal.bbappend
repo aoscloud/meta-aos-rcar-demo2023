@@ -1,5 +1,4 @@
-# Enable RO rootfs
-IMAGE_FEATURES_append = " read-only-rootfs"
+require recipes-core/images/aos-image.inc
 
 IMAGE_INSTALL += " \
     xen \
@@ -19,21 +18,7 @@ IMAGE_INSTALL += " \
 
 # Aos components
 IMAGE_INSTALL += " \
-    aos-iamanager \
-    aos-servicemanager \
-    aos-updatemanager \
     ${@bb.utils.contains('GEN3_DOM0_OS', 'zephyr', 'aos-messageproxy ', '', d)} \
 "
 
-ROOTFS_POSTPROCESS_COMMAND += "set_rootfs_version; create_unprovisioned_flag;"
-
-set_rootfs_version() {
-    install -d ${IMAGE_ROOTFS}/etc/aos
-
-    echo "VERSION=\"${DOMD_IMAGE_VERSION}\"" > ${IMAGE_ROOTFS}/etc/aos/version
-}
-
-create_unprovisioned_flag() {
-    install -d ${DEPLOY_DIR_IMAGE}/aos
-    touch ${DEPLOY_DIR_IMAGE}/aos/.unprovisioned
-}
+AOS_ROOTFS_IMAGE_VERSION = "${AOS_DOMD_IMAGE_VERSION}"
