@@ -37,10 +37,10 @@ variables:
   GEN3_DOMD_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN3_DOMD_NODE_ID}"
   GEN3_DOM0_NODE_TYPE: "%{UNIT_MODEL}-%{UNIT_VERSION}-%{GEN3_DOM0_NODE_ID}"
 
-  NODE_LIST: "%{GEN4_DOMD_NODE_ID} %{GEN4_DOM0_NODE_ID}"
-  REMOTE_IAMS: "%{GEN4_DOM0_NODE_ID}"
-  REMOTE_IAMS_ADDRESSES: "%{GEN4_DOM0_HOST_NAME}.%{GEN4_DOMAIN_NAME}"
-  UM_LIST: "%{GEN4_DOMD_NODE_ID}"
+  UM_NODES: "%{GEN4_DOMD_NODE_ID}"
+  SM_NODES: "%{GEN4_DOM0_NODE_ID}"
+  IAM_NODES: "%{GEN4_DOM0_NODE_ID}"
+  IAM_HOSTNAMES: "%{GEN4_DOM0_HOST_NAME}.%{GEN4_DOMAIN_NAME}"
 
   # Network configuration
 
@@ -159,11 +159,12 @@ common_data:
       ]
 
     # Aos configuration
-    - [UNIT_MODEL, "%{UNIT_MODEL}"]
-    - [UNIT_VERSION, "%{UNIT_VERSION}"]
-    - [MAIN_NODE_ADDRESS, "%{GEN4_DOMD_HOST_NAME}.%{GEN4_DOMAIN_NAME}"]
-    - [DOM0_IMAGE_VERSION, "%{BUNDLE_IMAGE_VERSION}"]
-    - [DOMD_IMAGE_VERSION, "%{BUNDLE_IMAGE_VERSION}"]
+    - [AOS_UNIT_MODEL, "%{UNIT_MODEL}"]
+    - [AOS_UNIT_VERSION, "%{UNIT_VERSION}"]
+    - [AOS_MAIN_NODE_ID, "%{GEN4_DOMD_NODE_ID}"]
+    - [AOS_MAIN_NODE_HOSTNAME, "%{GEN4_DOMD_HOST_NAME}.%{GEN4_DOMAIN_NAME}"]
+    - [AOS_DOM0_IMAGE_VERSION, "%{BUNDLE_IMAGE_VERSION}"]
+    - [AOS_DOMD_IMAGE_VERSION, "%{BUNDLE_IMAGE_VERSION}"]
 
   # Common configuration options for all dom0
   dom0_conf: &DOM0_CONF
@@ -171,15 +172,15 @@ common_data:
     # Disable HWDB which quite huge (around 15MB) and is not required at all
     - [BAD_RECOMMENDATIONS_append, " udev-hwdb"]
 
+    # Aos configuration
     - [AOS_RUNNER, "runx"]
 
-    # Aos configuration
-    - [BUNDLE_DIR, "${TOPDIR}/../../../.."]
-    - [BUNDLE_OSTREE_REPO, "${TOPDIR}/../../../../rootfs_repo"]
-    - [BUNDLE_IMAGE_VERSION, "%{BUNDLE_IMAGE_VERSION}"]
-    - [BUNDLE_DOM0_TYPE, "%{BUNDLE_DOM0_TYPE}"]
-    - [BUNDLE_DOMD_TYPE, "%{BUNDLE_DOMD_TYPE}"]
-    - [DOMD_REF_VERSION, "%{BUNDLE_REF_VERSION}"]
+    - [AOS_BUNDLE_DIR, "${TOPDIR}/../../../.."]
+    - [AOS_BUNDLE_OSTREE_REPO, "${TOPDIR}/../../../../rootfs_repo"]
+    - [AOS_BUNDLE_IMAGE_VERSION, "%{BUNDLE_IMAGE_VERSION}"]
+    - [AOS_BUNDLE_DOM0_TYPE, "%{BUNDLE_DOM0_TYPE}"]
+    - [AOS_BUNDLE_DOMD_TYPE, "%{BUNDLE_DOMD_TYPE}"]
+    - [AOS_DOMD_REF_VERSION, "%{BUNDLE_REF_VERSION}"]
 
   # Common configuration options for all domx
   domx_conf: &DOMX_CONF
@@ -243,14 +244,15 @@ components:
         - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DOMD_IP}"]
 
         # Aos configuration
-        - [NODE_ID, "%{GEN4_DOMD_NODE_ID}"]
-        - [NODE_TYPE, "%{GEN4_DOMD_NODE_TYPE}"]
-        - [NODE_LIST, "%{NODE_LIST}"]
-        - [UM_LIST, "%{UM_LIST}"]
-        - [REMOTE_IAMS, "%{REMOTE_IAMS}"]
-        - [REMOTE_IAMS_ADDRESSES, "%{REMOTE_IAMS_ADDRESSES}"]
-
-        - [VIS_DATA_PROVIDER, "%{AOS_VIS_DATA_PROVIDER}"]
+        - [AOS_NODE_ID, "%{GEN4_DOMD_NODE_ID}"]
+        - [AOS_NODE_HOSTNAME, "%{GEN4_DOMD_HOST_NAME}.%{GEN4_DOMAIN_NAME}"]
+        - [AOS_NODE_TYPE, "%{GEN4_DOMD_NODE_TYPE}"]
+        - [AOS_IAM_NODES, "%{IAM_NODES}"]
+        - [AOS_IAM_HOSTNAMES, "%{IAM_HOSTNAMES}"]
+        - [AOS_SM_NODES, "%{SM_NODES}"]
+        - [AOS_UM_NODES, "%{UM_NODES}"]
+        - [AOS_UM_COMPONENT_PREFIX, "%{UNIT_MODEL}-%{UNIT_VERSION}-gen4-"]
+        - [AOS_VIS_DATA_PROVIDER, "%{VIS_DATA_PROVIDER}"]
 
       build_target: "%{GEN4_XT_DOMD_IMAGE}"
       layers:
@@ -318,8 +320,10 @@ components:
         - [DNSMASQ_ADDRESSES, "/wwwivi/%{GEN4_DOMD_IP}"]
 
         # Aos configuration
-        - [NODE_ID, "%{GEN3_DOMD_NODE_ID}"]
-        - [NODE_TYPE, "%{GEN3_DOMD_NODE_TYPE}"]
+        - [AOS_NODE_ID, "%{GEN3_DOMD_NODE_ID}"]
+        - [AOS_NODE_TYPE, "%{GEN3_DOMD_NODE_TYPE}"]
+        - [AOS_NODE_HOSTNAME, "%{GEN3_DOMD_HOST_NAME}.%{GEN3_DOMAIN_NAME}"]
+        - [AOS_UM_COMPONENT_PREFIX, "%{UNIT_MODEL}-%{UNIT_VERSION}-gen3-"]
 
       build_target: "%{GEN3_XT_DOMD_IMAGE}"
       layers:
@@ -409,10 +413,10 @@ parameters:
       default: true
       overrides:
         variables:
-          NODE_LIST: "%{GEN4_DOMD_NODE_ID} %{GEN4_DOM0_NODE_ID} %{GEN3_DOMD_NODE_ID} %{GEN3_DOM0_NODE_ID}"
-          UM_LIST: "%{GEN4_DOMD_NODE_ID} %{GEN3_DOMD_NODE_ID}"
-          REMOTE_IAMS: "%{GEN4_DOM0_NODE_ID} %{GEN3_DOMD_NODE_ID} %{GEN3_DOM0_NODE_ID}"
-          REMOTE_IAMS_ADDRESSES: "%{GEN4_DOM0_HOST_NAME}.%{GEN4_DOMAIN_NAME} %{GEN3_DOMD_HOST_NAME}.%{GEN3_DOMAIN_NAME} %{GEN3_DOM0_HOST_NAME}.%{GEN3_DOMAIN_NAME}"
+          SM_NODES: "%{GEN4_DOMD_NODE_ID} %{GEN4_DOM0_NODE_ID} %{GEN3_DOMD_NODE_ID} %{GEN3_DOM0_NODE_ID}"
+          UM_NODES: "%{GEN4_DOMD_NODE_ID} %{GEN3_DOMD_NODE_ID}"
+          IAM_NODES: "%{GEN4_DOMD_NODE_ID} %{GEN4_DOM0_NODE_ID} %{GEN3_DOMD_NODE_ID} %{GEN3_DOM0_NODE_ID}"
+          IAM_HOSTNAMES: "%{GEN4_DOMD_HOST_NAME}.%{GEN4_DOMAIN_NAME} %{GEN4_DOM0_HOST_NAME}.%{GEN4_DOMAIN_NAME} %{GEN3_DOMD_HOST_NAME}.%{GEN3_DOMAIN_NAME} %{GEN3_DOM0_HOST_NAME}.%{GEN3_DOMAIN_NAME}"
 
         components:
           gen3-dom0:
@@ -635,11 +639,15 @@ parameters:
                 - [DOM0_MAC, "08:00:27:ff:cf:cb"]
 
                 # Aos configuration
-                - [NODE_ID, "%{GEN4_DOM0_NODE_ID}"]
-                - [NODE_TYPE, "%{GEN4_DOM0_NODE_TYPE}"]
-                - [RH850_IMAGE_VERSION, "%{RH850_IMAGE_VERSION}"]
-                - [BUNDLE_RH850_TYPE, "%{BUNDLE_RH850_TYPE}"]
-                - [RH850_IMAGE_PATH, "%{RH850_IMAGE_PATH}"]
+                - [AOS_NODE_ID, "%{GEN4_DOM0_NODE_ID}"]
+                - [AOS_NODE_TYPE, "%{GEN4_DOM0_NODE_TYPE}"]
+                - [
+                    AOS_NODE_HOSTNAME,
+                    "%{GEN4_DOM0_HOST_NAME}.%{GEN4_DOMAIN_NAME}",
+                  ]
+                - [AOS_RH850_IMAGE_VERSION, "%{RH850_IMAGE_VERSION}"]
+                - [AOS_BUNDLE_RH850_TYPE, "%{BUNDLE_RH850_TYPE}"]
+                - [AOS_RH850_IMAGE_PATH, "%{RH850_IMAGE_PATH}"]
 
               layers:
                 - "../../../meta-virtualization"
@@ -697,8 +705,12 @@ parameters:
                 - [DOM0_MAC, "08:00:27:ff:cb:cb"]
 
                 # Aos configuration
-                - [NODE_ID, "%{GEN3_DOM0_NODE_ID}"]
-                - [NODE_TYPE, "%{GEN3_DOM0_NODE_TYPE}"]
+                - [AOS_NODE_ID, "%{GEN3_DOM0_NODE_ID}"]
+                - [AOS_NODE_TYPE, "%{GEN3_DOM0_NODE_TYPE}"]
+                - [
+                    AOS_NODE_HOSTNAME,
+                    "%{GEN3_DOM0_HOST_NAME}.%{GEN3_DOMAIN_NAME}",
+                  ]
 
               layers:
                 - "../../../meta-virtualization"
@@ -778,10 +790,12 @@ parameters:
           GEN4_DOM0_OS: "zephyr"
           GEN4_DOMD_IP: "10.0.0.1"
           GEN3_DOMD_IP: "10.0.0.2"
+          GEN4_DOM0_NODE_TYPE: "zephyr-%{GEN4_DOM0_NODE_ID}"
+          GEN3_DOM0_NODE_TYPE: "zephyr-%{GEN3_DOM0_NODE_ID}"
           GEN4_DOMD_NODE_TYPE: "zephyr-%{GEN4_DOMD_NODE_ID}"
           GEN3_DOMD_NODE_TYPE: "zephyr-%{GEN3_DOMD_NODE_ID}"
-          REMOTE_IAMS: "%{GEN3_DOMD_NODE_ID}"
-          REMOTE_IAMS_ADDRESSES: "%{GEN3_DOMD_HOST_NAME}.%{GEN3_DOMAIN_NAME}"
+          IAM_NODES: "%{GEN4_DOMD_NODE_ID} %{GEN3_DOMD_NODE_ID}"
+          IAM_HOSTNAMES: "%{GEN4_DOMD_HOST_NAME}.%{GEN4_DOMAIN_NAME} %{GEN3_DOMD_HOST_NAME}.%{GEN3_DOMAIN_NAME}"
 
         components:
           gen4-dom0:
@@ -856,9 +870,9 @@ parameters:
       default: true
       overrides:
         variables:
-          AOS_VIS_DATA_PROVIDER: "renesassimulatoradapter"
+          VIS_DATA_PROVIDER: "renesassimulatoradapter"
 
     telemetryemulator:
       overrides:
         variables:
-          AOS_VIS_DATA_PROVIDER: "telemetryemulatoradapter"
+          VIS_DATA_PROVIDER: "telemetryemulatoradapter"
