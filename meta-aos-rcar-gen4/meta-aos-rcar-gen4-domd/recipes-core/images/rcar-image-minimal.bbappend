@@ -28,3 +28,10 @@ IMAGE_INSTALL += " \
 "
 
 AOS_ROOTFS_IMAGE_VERSION = "${AOS_DOMD_IMAGE_VERSION}"
+
+IMAGE_POSTPROCESS_COMMAND += "create_boot_version;"
+
+create_boot_version() {
+    install -d ${DEPLOY_DIR_IMAGE}/dom0/aos
+    echo "VERSION=\"${AOS_DOM0_IMAGE_VERSION}\"" > ${DEPLOY_DIR_IMAGE}/dom0/aos/version
+}
