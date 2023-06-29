@@ -14,12 +14,7 @@ IMAGE_INSTALL += " \
 
 INITRAMFS_MAXSIZE="262144"
 
-IMAGE_POSTPROCESS_COMMAND += "set_image_version; create_unprovisioned_flag;"
-
-set_image_version() {
-    install -d ${DEPLOY_DIR_IMAGE}/aos
-    echo "VERSION=\"${DOM0_IMAGE_VERSION}\"" > ${DEPLOY_DIR_IMAGE}/aos/version
-}
+IMAGE_POSTPROCESS_COMMAND += "create_unprovisioned_flag;"
 
 create_unprovisioned_flag() {
     install -d ${DEPLOY_DIR_IMAGE}/aos

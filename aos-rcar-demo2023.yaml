@@ -284,6 +284,7 @@ components:
         - "tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.ext4"
         - "tmp/work-shared/rcar-image-minimal-%{GEN4_MACHINE}/rootfs"
         - "tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
+        - "tmp/deploy/images/%{GEN4_MACHINE}/dom0/aos/version"
 
   gen3-domd:
     build-dir: "%{YOCTOS_WORK_DIR}"
@@ -358,6 +359,7 @@ components:
         - "tmp/deploy/images/%{GEN3_MACHINE}/core-image-minimal-%{GEN3_MACHINE}.ext4"
         - "tmp/work-shared/core-image-minimal-%{GEN3_MACHINE}/rootfs"
         - "tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
+        - "tmp/deploy/images/%{GEN3_MACHINE}/dom0/aos/version"
 
 images:
   gen4_full:
@@ -370,6 +372,7 @@ images:
         type: ext4
         size: 128 MiB
         items:
+          "aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/dom0/aos/version"
           "xen": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
           "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
@@ -379,6 +382,7 @@ images:
         type: ext4
         size: 128 MiB
         items:
+          "aos/version": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/dom0/aos/version"
           "xen": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xen-%{GEN4_MACHINE}.uImage"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
           "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
@@ -432,6 +436,7 @@ parameters:
                 type: ext4
                 size: 128 MiB
                 items:
+                  "aos/version": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/dom0/aos/version"
                   "xen": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
                   "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
                   "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
@@ -441,6 +446,7 @@ parameters:
                 type: ext4
                 size: 128 MiB
                 items:
+                  "aos/version": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/dom0/aos/version"
                   "xen": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xen-%{GEN3_MACHINE}.uImage"
                   "xenpolicy": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
                   "xen.dtb": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
@@ -675,7 +681,6 @@ parameters:
               target_images:
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
-                - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
 
           gen3-dom0:
@@ -738,8 +743,8 @@ parameters:
               target_images:
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
-                - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
                 - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/.unprovisioned"
+
         images:
           gen4_full:
             partitions:
