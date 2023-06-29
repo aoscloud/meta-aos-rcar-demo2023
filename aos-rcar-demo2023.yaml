@@ -809,6 +809,9 @@ parameters:
               board: "%{GEN4_ZEPHYR_DOM0_MACHINE}"
               target: aos_core_zephyr
               work_dir: build
+              vars:
+                - "CONFIG_AOS_NODE_ID=\\\\\\\"%{GEN4_DOM0_NODE_ID}\\\\\\\""
+                - "CONFIG_AOS_NODE_TYPE=\\\\\\\"%{GEN4_DOM0_NODE_TYPE}\\\\\\\""
               shields:
                 - "xen_dom0"
               additional_deps:
@@ -826,6 +829,9 @@ parameters:
               board: "%{GEN3_ZEPHYR_DOM0_MACHINE}"
               target: aos_core_zephyr
               work_dir: build
+              vars:
+                - "CONFIG_AOS_NODE_ID=\\\\\\\"%{GEN3_DOM0_NODE_ID}\\\\\\\""
+                - "CONFIG_AOS_NODE_TYPE=\\\\\\\"%{GEN3_DOM0_NODE_TYPE}\\\\\\\""
               shields:
                 - "xen_dom0"
               additional_deps:
