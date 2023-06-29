@@ -282,7 +282,7 @@ components:
         - "tmp/deploy/images/%{GEN4_MACHINE}/xenpolicy-%{GEN4_MACHINE}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/%{GEN4_XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{GEN4_MACHINE}/rcar-image-minimal-%{GEN4_MACHINE}.ext4"
-        - "tmp/deploy/images/%{GEN4_MACHINE}/aos/.unprovisioned"
+        - "tmp/work-shared/rcar-image-minimal-%{GEN4_MACHINE}/rootfs"
         - "tmp/deploy/images/%{GEN4_MACHINE}/Image-%{GEN4_MACHINE}.bin"
 
   gen3-domd:
@@ -356,7 +356,7 @@ components:
         - "tmp/deploy/images/%{GEN3_MACHINE}/xenpolicy-%{GEN3_MACHINE}"
         - "tmp/deploy/images/%{GEN3_MACHINE}/%{GEN3_XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{GEN3_MACHINE}/core-image-minimal-%{GEN3_MACHINE}.ext4"
-        - "tmp/deploy/images/%{GEN3_MACHINE}/aos/.unprovisioned"
+        - "tmp/work-shared/core-image-minimal-%{GEN3_MACHINE}/rootfs"
         - "tmp/deploy/images/%{GEN3_MACHINE}/Image-%{GEN3_MACHINE}.bin"
 
 images:
@@ -399,7 +399,7 @@ images:
         type: ext4
         size: 512 MiB
         items:
-          "/aos/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN4_MACHINE}/aos/.unprovisioned"
+          "/": "%{YOCTOS_WORK_DIR}/%{GEN4_DOMD_BUILD_DIR}/tmp/work-shared/rcar-image-minimal-%{GEN4_MACHINE}/rootfs/var"
 
       domd_aos:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
@@ -461,7 +461,7 @@ parameters:
                 type: ext4
                 size: 1024 MiB
                 items:
-                  "/aos/.unprovisioned": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/deploy/images/%{GEN3_MACHINE}/aos/.unprovisioned"
+                  "/": "%{YOCTOS_WORK_DIR}/%{GEN3_DOMD_BUILD_DIR}/tmp/work-shared/core-image-minimal-%{GEN3_MACHINE}/rootfs/var"
 
               domd_aos:
                 gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
