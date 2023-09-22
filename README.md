@@ -109,7 +109,7 @@ Gen3 board:
 
 ```sh
 setenv aos_boot1 'if test ${aos_boot1_ok} -eq 1; then setenv aos_boot1_ok 0; setenv aos_boot2_ok 1; setenv aos_boot_part 0; setenv aos_boot_slot 1; echo "==== Boot from part 1"; run aos_save_vars; run aos_boot_cmd; fi'
-setenv 'aos_boot2=if test ${aos_boot2_ok} -eq 1; then setenv aos_boot2_ok 0; setenv aos_boot1_ok 1; setenv aos_boot_part 1; setenv aos_boot_slot 2; echo "==== Boot from part 2"; run aos_save_vars; run aos_boot_cmd; fi'
+setenv aos_boot2 'if test ${aos_boot2_ok} -eq 1; then setenv aos_boot2_ok 0; setenv aos_boot1_ok 1; setenv aos_boot_part 1; setenv aos_boot_slot 2; echo "==== Boot from part 2"; run aos_save_vars; run aos_boot_cmd; fi'
 setenv aos_boot_cmd 'run aos_xen_load; run aos_dtb_load; run aos_zephyr_load; run aos_xenpolicy_load; bootm 0x48080000 - 0x48000000'
 setenv aos_boot_device 'mmcblk1'
 setenv aos_default_vars 'setenv aos_boot_main 0; setenv aos_boot1_ok 1; setenv aos_boot2_ok 1; setenv aos_boot_part 0'
@@ -128,7 +128,7 @@ Gen4 board:
 
 ```sh
 setenv aos_boot1 'if test ${aos_boot1_ok} -eq 1; then setenv aos_boot1_ok 0; setenv aos_boot2_ok 1; setenv aos_boot_part 0; setenv aos_boot_slot 1; echo "==== Boot from part 1"; run aos_save_vars; run aos_boot_cmd; fi'
-setenv 'aos_boot2=if test ${aos_boot2_ok} -eq 1; then setenv aos_boot2_ok 0; setenv aos_boot1_ok 1; setenv aos_boot_part 1; setenv aos_boot_slot 2; echo "==== Boot from part 2"; run aos_save_vars; run aos_boot_cmd; fi'
+setenv aos_boot2 'if test ${aos_boot2_ok} -eq 1; then setenv aos_boot2_ok 0; setenv aos_boot1_ok 1; setenv aos_boot_part 1; setenv aos_boot_slot 2; echo "==== Boot from part 2"; run aos_save_vars; run aos_boot_cmd; fi'
 setenv aos_boot_cmd 'run aos_xen_load; run aos_dtb_load; run aos_zephyr_load; run aos_xenpolicy_load; bootm 0x48080000 - 0x48000000'
 setenv aos_boot_device 'sda'
 setenv aos_default_vars 'setenv aos_boot_main 0; setenv aos_boot1_ok 1; setenv aos_boot2_ok 1; setenv aos_boot_part 0'
