@@ -18,7 +18,7 @@ FILES_${PN} += " \
     ${nonarch_base_libdir} \
 "
 
-do_deploy[noexec] = "1"
+#do_deploy[noexec] = "1"
 
 do_install() {
     # install pkcs11 TA
